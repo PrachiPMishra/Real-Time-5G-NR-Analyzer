@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="images/banner.jpg" alt="5G NR Spectrum Analyzer Banner" width="100%"/>
-</p>
+
 
 <h1 align="center">Real-Time 5G NR Downlink Spectrum Analyzer and PSS Detector</h1>
 
