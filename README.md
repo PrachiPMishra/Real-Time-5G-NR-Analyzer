@@ -1,2 +1,390 @@
-# Real-Time-5G-NR-Spectrum-Analyzer-PSS-Detector-using-ADALM-Pluto-SDR
-Real-time 5G NR Spectrum Analyzer and Primary Synchronization Signal Detector using ADALM-Pluto SDR and MATLAB.
+<p align="center">
+  <img src="images/banner.jpg" alt="5G NR Spectrum Analyzer Banner" width="100%"/>
+</p>
+
+<h1 align="center">Real-Time 5G NR Downlink Spectrum Analyzer and PSS Detector</h1>
+
+<p align="center">
+  <em>A low-cost, software-defined radio solution to capture, analyze, and decode live 5G New Radio (NR) downlink signals.</em>
+</p>
+
+<p align="center">
+  <strong>Suggested Repository Names:</strong> <code>5G-PlutoSDR-Analyzer</code> | <code>PlutoSDR-5G-Monitor</code> | <code>5G-NR-RealTime-Analyzer</code>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/MATLAB-R2023a%2B-DE5C0B?style=for-the-badge&logo=mathworks&logoColor=white" alt="MATLAB"/>
+  <img src="https://img.shields.io/badge/Hardware-ADALM--Pluto%20SDR-0071C5?style=for-the-badge&logo=analog-devices&logoColor=white" alt="Pluto SDR"/>
+  <img src="https://img.shields.io/badge/Band-5G%20NR%20n78-00D4AA?style=for-the-badge" alt="n78"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License"/>
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" alt="Status"/>
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge" alt="Version"/>
+</p>
+
+---
+
+## 📖 Short Description
+
+This project transforms an inexpensive ADALM-Pluto Software-Defined Radio (SDR) into a real-time 5G New Radio (NR) downlink signal analyzer. By capturing live over-the-air 5G waveforms in the n78 band (3.3–3.8 GHz) and processing them through a custom MATLAB digital signal processing (DSP) pipeline, it extracts critical physical-layer parameters. It solves the problem of high barriers to entry in 5G research by replacing multi-thousand-dollar proprietary spectrum analyzers with an affordable, accessible software-defined alternative. This system is highly useful for visualizing the OFDM structure of real-world 5G networks and verifying base station synchronization blocks (SSBs).
+
+---
+
+## 🔭 Project Overview
+
+**Why this project exists**  
+Commercial 5G spectrum analyzers and test equipment are prohibitively expensive, restricting access for many students, researchers, and independent engineers. This project democratizes 5G physical-layer experimentation by utilizing a ~$200 SDR to achieve comparable signal visualization and synchronization analysis.
+
+**Real-world motivation**  
+As 5G networks become ubiquitous, understanding their physical-layer behavior (such as orthogonal frequency division multiplexing (OFDM), resource block allocation, and synchronization signals) is essential. A real-world hands-on approach is far more educational than theoretical simulations.
+
+**Applications & Expected Users**  
+- **Students & Professors:** For laboratory experiments and classroom demonstrations of modern wireless protocols.
+- **Researchers & Graduate Applicants:** To build upon a solid DSP foundation for advanced 5G/6G physical-layer research.
+- **SDR & RF Engineers:** For rapid prototyping, network diagnostics, and low-cost field monitoring of 5G cells.
+
+**Why SDR is useful & interesting here**  
+Software-Defined Radios shift complex RF signal processing into the digital domain. Using the ADALM-Pluto SDR demonstrates that complex tasks like Carrier Frequency Offset (CFO) correction, windowing, multi-frame FFT averaging, and Primary Synchronization Signal (PSS) detection can all run efficiently in real-time on a standard PC.
+
+---
+
+## ✨ Features
+
+- **Live 5G NR Capture:** Captures real over-the-air 5G downlink signals in the n78 band (e.g., 3.51 GHz).
+- **Smooth RF Spectrum Analyzer:** Implements a 131,072-point high-resolution FFT with 6-set multi-frame averaging and Hann windowing.
+- **Waterfall Spectrogram:** Real-time time-frequency visualization to monitor dynamic downlink resource block allocation and SSBs.
+- **IQ Constellation Diagram:** Displays the raw I/Q sample modulation cluster directly from the SDR.
+- **Primary Synchronization Signal (PSS) Detection:** Frequency-domain cross-correlation against 5G reference sequences to identify the serving cell's NID2 parameter (0, 1, or 2).
+- **DC Offset Removal:** Real-time frequency-domain notch filter to suppress the direct-conversion center spike of the SDR.
+- **Coarse CFO Correction:** Phase-based autocorrelation estimation and compensation for oscillator mismatch.
+- **ARFCN-Based Tuning:** Automatic center frequency calculation from NR-ARFCN (preconfigured for Jio n78).
+
+---
+
+## 🎬 Demo
+
+> **Demo Video Placeholder**  
+> *Place a GIF of the real-time MATLAB interface here.*
+> 
+> `![Demo Video GIF](images/demo.gif)`
+
+> **Full Video Demonstration**  
+> A comprehensive 7-minute video demonstration is included in this repository.  
+> 📁 [`ADC_Video_5G.mp4`](ADC_Video_5G.mp4)
+
+---
+
+## 📸 Screenshots
+
+*Below are placeholders for the visual outputs generated by the system. Add your images to the `results/` folder.*
+
+### 1. RF Spectrum
+*Displays the high-resolution smoothed RF spectrum with the OFDM plateau and notched DC carrier.*
+`![RF Spectrum](results/rf_spectrum.png)`
+
+### 2. Waterfall Spectrogram
+*Shows the time-frequency structure, revealing subcarrier energy and transmission bursts.*
+`![Waterfall Spectrogram](results/waterfall.png)`
+
+### 3. Constellation Diagram
+*Plots the raw IQ samples before full channel equalization.*
+`![Constellation Diagram](results/constellation.png)`
+
+### 4. PSS Detection Log
+*MATLAB command window showing NID2 correlations and CFO estimates.*
+`![PSS Detection](results/pss_detection.png)`
+
+### 5. Full MATLAB Interface
+*The complete workspace running the continuous processing loop.*
+`![MATLAB Interface](results/matlab_interface.png)`
+
+---
+
+## 🏗️ System Architecture
+
+The architecture seamlessly integrates hardware acquisition with software-defined digital signal processing.
+
+```text
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                                5G NR BASE STATION                                 │
+│                           n78 Band Transmitter (3.51 GHz)                         │
+└─────────────────────────────────────────┬─────────────────────────────────────────┘
+                                          │ Over-The-Air RF
+                                          ▼
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                              ADALM-Pluto SDR (Hardware)                           │
+│ ┌──────────────┐   ┌────────────────┐   ┌───────────────┐   ┌───────────────────┐ │
+│ │  Rx Antenna  ├──►│ LNA / RF Tuner ├──►│ Downconverter ├──►│ Dual 12-bit ADC   │ │
+│ └──────────────┘   └────────────────┘   └───────────────┘   └─────────┬─────────┘ │
+└───────────────────────────────────────────────────────────────────────┼───────────┘
+                                                                        │ USB 2.0 (20 MSPS I/Q)
+                                                                        ▼
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                                MATLAB (Software Host)                             │
+│ ┌──────────────┐   ┌────────────────┐   ┌───────────────┐   ┌───────────────────┐ │
+│ │ Frame Concat ├──►│ DC Notch Filter├──►│ CFO Correction├──►│ 131K FFT & Window │ │
+│ └──────────────┘   └────────────────┘   └───────┬───────┘   └─────────┬─────────┘ │
+│                                                 │                     │           │
+│                                                 ▼                     ▼           │
+│                                       ┌─────────────────┐   ┌───────────────────┐ │
+│                                       │  PSS Detection  │   │ Spectral Averaging│ │
+│                                       │ (NID2 = 0,1,2)  │   │  & Visualizations │ │
+│                                       └─────────────────┘   └───────────────────┘ │
+└───────────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Block Explanations:**
+- **5G NR Base Station:** The physical gNodeB broadcasting the downlink signal (e.g., Jio on ARFCN 634080).
+- **ADALM-Pluto SDR:** Captures the analog RF signal, filters, downconverts via a local oscillator, and digitizes it to complex I/Q samples at 20 Msps.
+- **Frame Concat:** Combines 4 hardware frames (32,768 samples each) into a single 131,072-sample block for high-resolution analysis.
+- **DC Notch Filter:** Suppresses the LO feedthrough spike caused by the SDR's direct-conversion architecture.
+- **CFO Correction:** Estimates frequency deviation and rotates the phase of samples to correct the offset.
+- **131K FFT & Window:** Applies a Hann window to reduce spectral leakage and computes the Fourier transform.
+- **Spectral Averaging & Visualizations:** Accumulates 6 blocks of FFT data to plot a smooth spectrum, updates the waterfall, and plots the constellation.
+- **PSS Detection:** Correlates the signal against known 5G PSS references to identify the physical layer cell ID parameter.
+
+---
+
+## ⚡ Signal Processing Pipeline
+
+```text
+ 1. RF Signal (3.3 - 3.8 GHz)
+      │
+      ▼
+ 2. ADALM Pluto SDR (Downconversion & ADC)
+      │
+      ▼
+ 3. Digital I/Q Samples (20 Msps)
+      │
+      ▼
+ 4. MATLAB Buffer (131,072 samples)
+      │
+      ├──► 5. DC Offset Removal (Frequency-domain zeroing)
+      │
+      ├──► 6. Coarse CFO Estimation (Autocorrelation)
+      │
+      ├──► 7. Phase Rotation Correction (exp(-j2πΔfn/Fs))
+      │
+      ├──► 8. Hann Windowing & High-Resolution FFT
+      │
+      ├──► 9. Spectral Averaging & Smoothing (movmean)
+      │
+      ├──► 10. Visualizations (Spectrum, Waterfall, Constellation)
+      │
+      └──► 11. PSS Detection (2048-pt FFT & Reference Correlation)
+```
+
+---
+
+## 🛠️ Hardware Used
+
+| Component | Specification | Role in Project |
+| :--- | :--- | :--- |
+| **ADALM-Pluto SDR** | 325 MHz - 3.8 GHz, 12-bit ADC | RF front-end receiver and digitizer |
+| **Omnidirectional Antenna** | SMA, 50Ω, Wideband | Captures the over-the-air 5G downlink signal |
+| **USB 2.0 Cable** | High-Speed Data Transport | Streams 20 MSPS I/Q data to the host PC |
+| **Host PC** | Windows / macOS / Linux | Runs MATLAB for real-time DSP and visualization |
+
+---
+
+## 💻 Software Used
+
+| Software / Toolbox | Version / Type | Purpose |
+| :--- | :--- | :--- |
+| **MATLAB** | R2023a+ | Core DSP execution environment |
+| **ADALM-Pluto Support Package** | Hardware Support | Interfaces MATLAB with the Pluto SDR (`sdrrx`) |
+| **Communications Toolbox** | MATLAB Add-on | Provides the `comm.ConstellationDiagram` object |
+| **DSP System Toolbox** | MATLAB Add-on | Provides the `dsp.SpectrumAnalyzer` (waterfall) object |
+| **5G Toolbox** | MATLAB Add-on | Generates 5G reference sequences (`nrPSS`) |
+
+---
+
+## 📂 Folder Structure
+
+```text
+5G-ADC-Project/
+├── README.md                      # Primary repository documentation
+├── INSTALL.md                     # Detailed installation and setup guide
+├── LICENSE                        # MIT License
+├── p5g.m                          # Main MATLAB processing script
+├── ADC_report_5G.pdf              # Comprehensive project report
+├── ADC_Video_5G.mp4               # 7-minute demo video
+│
+├── diagrams/                      # ASCII diagrams and topologies
+│   ├── folder_structure.txt
+│   ├── hardware_setup.txt
+│   ├── processing_pipeline.txt
+│   ├── signal_flow.txt
+│   ├── software_workflow.txt
+│   └── system_architecture.txt
+│
+├── images/                        # Banners and static graphics
+│   └── banner.jpg
+│
+├── results/                       # Outputs and screenshots (placeholders)
+│
+└── src/                           # Source directory (if split into modules)
+    └── p5g.m                      # Duplicate/modular script
+```
+
+---
+
+## 🚀 Installation
+
+Follow these steps to set up the environment and run the project locally.
+
+1. **Hardware Setup:**
+   - Connect the ADALM-Pluto SDR to your PC via USB.
+   - Attach the wideband antenna to the `RX` port.
+
+2. **MATLAB Dependencies:**
+   - Open MATLAB.
+   - Go to **Home** > **Add-Ons** > **Get Add-Ons**.
+   - Install the following toolboxes:
+     - *Communications Toolbox*
+     - *DSP System Toolbox*
+     - *Communications Toolbox Support Package for Analog Devices ADALM-Pluto Radio*
+     - *5G Toolbox* (Required for PSS detection)
+
+3. **Verify SDR Connection:**
+   Run the following in the MATLAB Command Window:
+   ```matlab
+   dev = findPlutoRadio;
+   disp(dev)
+   ```
+   *If successful, MATLAB will display the radio ID and parameters.*
+
+---
+
+## ▶️ Usage
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/5G-PlutoSDR-Analyzer.git
+   cd 5G-PlutoSDR-Analyzer
+   ```
+
+2. **Open the script:**
+   Open `p5g.m` (or `src/p5g.m`) in MATLAB.
+
+3. **Configure parameters (Optional):**
+   Modify the user parameters at the top of the script to match your local 5G cell:
+   ```matlab
+   ARFCN = 634080;               % Target 5G NR ARFCN (e.g., Jio n78)
+   gain = 45;                    % Receiver gain (dB)
+   framesPerSpectrum = 4;        % Increase for higher FFT resolution
+   avgSets = 6;                  % Increase for a smoother spectrum
+   ```
+
+4. **Run the visualization:**
+   Click **Run** in MATLAB or type `p5g` in the command window.
+   - The spectrum, waterfall, and constellation windows will open.
+   - PSS detection results will stream in the MATLAB Command Window.
+   - Press `Ctrl+C` in the Command Window to safely stop the capture.
+
+---
+
+## 🧠 Implementation
+
+The system is implemented entirely in MATLAB, leveraging the `sdrrx` system object to pull data iteratively in a real-time `while` loop. 
+
+- **Streaming Architecture:** Instead of capturing a single large dataset, the system requests 32,768 samples per frame. It concatenates 4 frames to build a 131,072-sample block for high-resolution analysis.
+- **Hardware Abstraction:** The `sdrrx` object handles all low-level libiio USB communications with the Pluto's Zynq FPGA, allowing the code to focus purely on baseband DSP.
+- **Asynchronous Plotting:** MATLAB UI objects (`dsp.SpectrumAnalyzer`, `comm.ConstellationDiagram`) and custom plots with `drawnow limitrate` are utilized to ensure the visualization layer does not bottleneck the RF sample acquisition loop.
+
+---
+
+## 🧮 Algorithms Used
+
+- **High-Resolution FFT:** Transforms time-domain I/Q samples into the frequency domain. The 131,072-point FFT provides an incredibly fine frequency resolution (~152 Hz/bin) to reveal the distinct OFDM subcarrier structures.
+- **Windowing:** A Hann window is applied before the FFT to drastically reduce spectral leakage and sidelobes caused by block truncation.
+- **DC Offset Removal:** A targeted frequency-domain notch filter that zeroes out the DC bin and its immediate neighbors to remove the AD9363 direct-conversion LO feedthrough.
+- **CFO Estimation:** A time-domain autocorrelation algorithm that computes the phase difference between consecutive samples to estimate and correct the carrier frequency offset.
+- **Spectrum Averaging:** A power accumulation algorithm that averages the magnitude-squared FFT results across 6 consecutive blocks, followed by a 200-point moving average (`movmean`), to smooth out Gaussian noise and stabilize the display.
+- **PSS Detection (Correlation):** Transforms the signal using a 2048-point FFT and calculates the complex cross-correlation against the three known frequency-domain 5G PSS reference sequences to find the peak match.
+
+---
+
+## 📊 Results
+
+- **RF Spectrum:** The output exhibits a distinct, wideband plateau defining the 5G NR channel (around 3510–3515 MHz for the tested cell). The applied DSP successfully flattens the noise floor and removes the center DC spike.
+- **Waterfall Spectrogram:** Clearly visualizes dynamically allocated OFDM resource blocks and periodic high-energy synchronization bursts (SSBs) over time.
+- **IQ Constellation:** Shows a characteristic clustered scatter plot of OFDM subcarriers. While phase noise and lack of fine equalization prevent a perfect QAM grid, the non-Gaussian structure confirms the reception of a digital communication signal.
+- **Detection Output:** The MATLAB console repeatedly prints positive detections (e.g., `PSS Detected! NID2 = 0`), proving the SDR has found and locked onto a legitimate 5G gNodeB transmission.
+
+---
+
+## 🚀 Future Improvements
+
+- **Full SSB Decoding:** Extend the pipeline to detect the Secondary Synchronization Signal (SSS) and calculate the full Physical Cell ID (PCI).
+- **PBCH Demodulation:** Demodulate the Physical Broadcast Channel to decode the Master Information Block (MIB).
+- **Channel Equalization:** Implement zero-forcing (ZF) or MMSE equalizers using reference signals to clear up the constellation diagram.
+- **Automated Band Scanning:** Create a script to sweep through standard 5G ARFCNs and automatically log active base stations.
+
+---
+
+## 📁 Repository Structure
+
+```text
+5G-ADC-Project/
+├── README.md                      # This file
+├── INSTALL.md                     # Detailed installation guide
+├── LICENSE                        # MIT License
+├── p5g.m                          # Main MATLAB processing script
+├── ADC_report_5G.pdf              # Comprehensive IEEE format project report
+├── ADC_Video_5G.mp4               # 7-minute demo video
+│
+├── diagrams/                      # ASCII diagrams and topologies
+│   ├── folder_structure.txt
+│   ├── hardware_setup.txt
+│   ├── processing_pipeline.txt
+│   ├── signal_flow.txt
+│   ├── software_workflow.txt
+│   └── system_architecture.txt
+│
+├── images/                        # Banners and static graphics
+│   └── banner.jpg
+│
+├── results/                       # Outputs and screenshots
+│
+└── src/                           # Modular MATLAB source directory
+    └── p5g.m                      
+```
+
+---
+
+## 📚 References
+
+1. 3GPP, "NR; Physical channels and modulation," 3rd Generation Partnership Project, TS 38.211, v16.5.0, 2020.
+2. 3GPP, "NR; Physical layer procedures for data," 3rd Generation Partnership Project, TS 38.214, v16.5.0, 2020.
+3. Analog Devices Inc., "ADALM-Pluto SDR Hardware Reference Manual," 2022.
+4. MathWorks, "5G Toolbox Documentation," Natick, MA, USA, 2023.
+5. S. Sesia, I. Toufik, and M. Baker, *LTE – The UMTS Long Term Evolution: From Theory to Practice*, 2nd ed. Hoboken, NJ, USA: Wiley, 2011.
+6. E. Dahlman, S. Parkvall, and J. Sköld, *5G NR: The Next Generation Wireless Access Technology*. London, U.K.: Academic Press, 2020.
+
+*(Refer to `ADC_report_5G.pdf` for the complete literature survey and reference list).*
+
+---
+
+## 👥 Authors
+
+- **Prachi Pratyasha Mishra** - *prachipmishra2002@gmail.com*
+- **Pravin Kumar Mahato** - *pravinmahato.231@gmail.com*
+- **Sambhav Gupta** - *guptasambhav1207@gmail.com*
+
+**Institution:** Department of Electronics and Communication (Communication & Networking), National Institute of Technology, Rourkela.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
+
+---
+
+## 🙏 Acknowledgements
+
+- **Analog Devices** for providing the accessible ADALM-Pluto SDR platform.
+- **MathWorks** for the powerful DSP, Communications, and 5G toolboxes.
+- **NIT Rourkela** (Department of ECE) for supporting research and hardware availability.
+- **3GPP Standards** for open specifications detailing the 5G NR physical layer.
+- **Jio** - whose operational n78 5G cell was utilized for live signal capture and validation.
