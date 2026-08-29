@@ -76,7 +76,7 @@ Software-Defined Radios shift complex RF signal processing into the digital doma
 
 ### 2. Waterfall Spectrogram
 *Shows the time-frequency structure, revealing subcarrier energy and transmission bursts.*
-![Waterfall Spectrogram](Results/waterfall_spectogram.png)
+![Waterfall Spectrogram](Results/waterfall_spectrogram.png)
 
 ### 3. Constellation Diagram
 *Plots the raw IQ samples before full channel equalization.*
