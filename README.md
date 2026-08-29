@@ -60,11 +60,6 @@ Software-Defined Radios shift complex RF signal processing into the digital doma
 
 ## 🎬 Demo
 
-> **Demo Video Placeholder**  
-> *Place a GIF of the real-time MATLAB interface here.*
-> 
-> `![Demo Video GIF](images/demo.gif)`
-
 > **Full Video Demonstration**  
 > A comprehensive 7-minute video demonstration is included in this repository.  
 > 📁 [`ADC_Video_5G.mp4`](ADC_Video_5G.mp4)
@@ -77,23 +72,19 @@ Software-Defined Radios shift complex RF signal processing into the digital doma
 
 ### 1. RF Spectrum
 *Displays the high-resolution smoothed RF spectrum with the OFDM plateau and notched DC carrier.*
-`![RF Spectrum](results/rf_spectrum.png)`
+`![RF Spectrum](Results/rf_spectrum.png)`
 
 ### 2. Waterfall Spectrogram
 *Shows the time-frequency structure, revealing subcarrier energy and transmission bursts.*
-`![Waterfall Spectrogram](results/waterfall.png)`
+`![Waterfall Spectrogram](Results/waterfall_spectogram.png)`
 
 ### 3. Constellation Diagram
 *Plots the raw IQ samples before full channel equalization.*
-`![Constellation Diagram](results/constellation.png)`
+`![Constellation Diagram](Results/constellation.png)`
 
 ### 4. PSS Detection Log
 *MATLAB command window showing NID2 correlations and CFO estimates.*
-`![PSS Detection](results/pss_detection.png)`
-
-### 5. Full MATLAB Interface
-*The complete workspace running the continuous processing loop.*
-`![MATLAB Interface](results/matlab_interface.png)`
+`![PSS Detection](Results/pss_detection.png)`
 
 ---
 
